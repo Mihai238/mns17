@@ -20,15 +20,15 @@ public class CellInfoProvider implements Serializable {
 
     private static final int INTERVAL_SEC = 5;
 
-    private final Observable<CellInfo> cellInfoObservable;
-    private Action1<CellInfo> callback;
+    private final Observable<List<CellInfo>> cellInfoObservable;
+    private Action1<List<CellInfo>> callback;
 
     public CellInfoProvider(TelephonyManager telephonyManager) {
         //noinspection Convert2Lambda,Anonymous2MethodRef
         cellInfoObservable = Observable.fromEmitter(emitter ->
-                callback = new Action1<CellInfo>() {
+                callback = new Action1<List<CellInfo>>() {
                     @Override
-                    public void call(CellInfo cellInfo) {
+                    public void call(List<CellInfo> cellInfo) {
                         emitter.onNext(cellInfo);
                     }
                 }, Emitter.BackpressureMode.BUFFER);
@@ -38,9 +38,7 @@ public class CellInfoProvider implements Serializable {
                 () -> {
                     List<CellInfo> allCellInfo = telephonyManager.getAllCellInfo();
                     Log.i(TAG, "Found " + allCellInfo.size() + " cells");
-                    for (CellInfo cellInfo : allCellInfo) {
-                        callback.call(cellInfo);
-                    }
+                    callback.call(allCellInfo);
                 },
                 0,
                 INTERVAL_SEC,
@@ -48,7 +46,7 @@ public class CellInfoProvider implements Serializable {
         );
     }
 
-    public Observable<CellInfo> getObservable() {
+    public Observable<List<CellInfo>> getObservable() {
         return cellInfoObservable;
     }
 
