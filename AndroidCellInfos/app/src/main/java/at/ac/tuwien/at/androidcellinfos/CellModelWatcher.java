@@ -26,7 +26,7 @@ public class CellModelWatcher implements Serializable {
     }
 
     public Observable<List<CellModel>> watch() {
-        return watch(5, TimeUnit.SECONDS);
+        return watch(30, TimeUnit.SECONDS);
     }
 
     public Observable<List<CellModel>> watch(long interval, TimeUnit unit) {

@@ -8,6 +8,8 @@ import android.telephony.CellInfoWcdma;
 
 public class CellModel {
 
+    public static final String UNKNOWN = "unknown";
+
     public enum CellType {
         GSM, CDMA, UMTS, LTE
     }
@@ -40,48 +42,48 @@ public class CellModel {
 
     private static CellModel from(CellInfoGsm info) {
         return new CellModel(
-                info.getCellIdentity().getCid() + "",
+                info.getCellIdentity().getCid() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getCid() + ""),
                 CellType.GSM,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                info.getCellIdentity().getMcc() + "",
-                info.getCellIdentity().getMnc() + "",
-                info.getCellIdentity().getLac() + "",
+                info.getCellIdentity().getMcc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMcc() + ""),
+                info.getCellIdentity().getMnc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMnc() + ""),
+                info.getCellIdentity().getLac() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getLac() + ""),
                 info.getCellSignalStrength().getDbm()
         );
     }
 
     private static CellModel from(CellInfoCdma info) {
         return new CellModel(
-                "N/A",
+                info.getCellIdentity().getBasestationId() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getBasestationId() + ""),
                 CellType.CDMA,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                "N/A",
-                info.getCellIdentity().getNetworkId() + "",
-                "N/A",
+                UNKNOWN,
+                info.getCellIdentity().getNetworkId() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getNetworkId() + ""),
+                UNKNOWN,
                 info.getCellSignalStrength().getDbm()
         );
     }
 
     private static CellModel from(CellInfoWcdma info) {
         return new CellModel(
-                info.getCellIdentity().getCid() + "",
-                CellType.UMTS,
+                info.getCellIdentity().getCid() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getCid() + ""),
+                CellType.GSM,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                info.getCellIdentity().getMcc() + "",
-                info.getCellIdentity().getMnc() + "",
-                info.getCellIdentity().getLac() + "",
+                info.getCellIdentity().getMcc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMcc() + ""),
+                info.getCellIdentity().getMnc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMnc() + ""),
+                info.getCellIdentity().getLac() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getLac() + ""),
                 info.getCellSignalStrength().getDbm()
         );
     }
 
     private static CellModel from(CellInfoLte info) {
         return new CellModel(
-                info.getCellIdentity().getCi() + "",
-                CellType.LTE,
+                info.getCellIdentity().getCi() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getCi() + ""),
+                CellType.GSM,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                info.getCellIdentity().getMcc() + "",
-                info.getCellIdentity().getMnc() + "",
-                info.getCellIdentity().getTac() + "",
+                info.getCellIdentity().getMcc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMcc() + ""),
+                info.getCellIdentity().getMnc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMnc() + ""),
+                info.getCellIdentity().getTac() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getTac() + ""),
                 info.getCellSignalStrength().getDbm()
         );
     }
