@@ -25,6 +25,7 @@ public class CellModel {
     private final String mobileNetworkId;
     private final String locationAreaCode;
     private final int signalStrengthDbm;
+    private final CellLocation location;
 
     public static CellModel from(CellInfo info) {
         if (info instanceof CellInfoGsm) {
@@ -41,14 +42,20 @@ public class CellModel {
     }
 
     private static CellModel from(CellInfoGsm info) {
+        int cid = info.getCellIdentity().getCid();
+        int mcc = info.getCellIdentity().getMcc();
+        int mnc = info.getCellIdentity().getMnc();
+        int lac = info.getCellIdentity().getLac();
+
         return new CellModel(
-                info.getCellIdentity().getCid() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getCid() + ""),
+                cid == Integer.MAX_VALUE ? UNKNOWN : (cid + ""),
                 CellType.GSM,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                info.getCellIdentity().getMcc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMcc() + ""),
-                info.getCellIdentity().getMnc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMnc() + ""),
-                info.getCellIdentity().getLac() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getLac() + ""),
-                info.getCellSignalStrength().getDbm()
+                mcc == Integer.MAX_VALUE ? UNKNOWN : (mcc + ""),
+                mnc == Integer.MAX_VALUE ? UNKNOWN : (mnc + ""),
+                lac == Integer.MAX_VALUE ? UNKNOWN : (lac + ""),
+                info.getCellSignalStrength().getDbm(),
+                cid == Integer.MAX_VALUE ? null : CellLocation.from(mcc, mnc, cid, lac)
         );
     }
 
@@ -60,36 +67,48 @@ public class CellModel {
                 UNKNOWN,
                 info.getCellIdentity().getNetworkId() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getNetworkId() + ""),
                 UNKNOWN,
-                info.getCellSignalStrength().getDbm()
+                info.getCellSignalStrength().getDbm(),
+                new CellLocation(info.getCellIdentity().getLatitude(), info.getCellIdentity().getLongitude())
         );
     }
 
     private static CellModel from(CellInfoWcdma info) {
+        int cid = info.getCellIdentity().getCid();
+        int mcc = info.getCellIdentity().getMcc();
+        int mnc = info.getCellIdentity().getMnc();
+        int lac = info.getCellIdentity().getLac();
+
         return new CellModel(
-                info.getCellIdentity().getCid() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getCid() + ""),
-                CellType.GSM,
+                cid == Integer.MAX_VALUE ? UNKNOWN : (cid + ""),
+                CellType.UMTS,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                info.getCellIdentity().getMcc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMcc() + ""),
-                info.getCellIdentity().getMnc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMnc() + ""),
-                info.getCellIdentity().getLac() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getLac() + ""),
-                info.getCellSignalStrength().getDbm()
+                mcc == Integer.MAX_VALUE ? UNKNOWN : (mcc + ""),
+                mnc == Integer.MAX_VALUE ? UNKNOWN : (mnc + ""),
+                lac == Integer.MAX_VALUE ? UNKNOWN : (lac + ""),
+                info.getCellSignalStrength().getDbm(),
+                cid == Integer.MAX_VALUE ? null : CellLocation.from(mcc, mnc, cid, lac)
         );
     }
 
     private static CellModel from(CellInfoLte info) {
+        int cid = info.getCellIdentity().getCi();
+        int mcc = info.getCellIdentity().getMcc();
+        int mnc = info.getCellIdentity().getMnc();
+        int lac = info.getCellIdentity().getTac();
+
         return new CellModel(
-                info.getCellIdentity().getCi() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getCi() + ""),
-                CellType.GSM,
+                cid == Integer.MAX_VALUE ? UNKNOWN : (cid + ""),
+                CellType.LTE,
                 info.isRegistered() ? CellState.ACTIVE : CellState.NEIGHBORING,
-                info.getCellIdentity().getMcc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMcc() + ""),
-                info.getCellIdentity().getMnc() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getMnc() + ""),
-                info.getCellIdentity().getTac() == Integer.MAX_VALUE ? UNKNOWN : (info.getCellIdentity().getTac() + ""),
-                info.getCellSignalStrength().getDbm()
+                mcc == Integer.MAX_VALUE ? UNKNOWN : (mcc + ""),
+                mnc == Integer.MAX_VALUE ? UNKNOWN : (mnc + ""),
+                lac == Integer.MAX_VALUE ? UNKNOWN : (lac + ""),
+                info.getCellSignalStrength().getDbm(),
+                cid == Integer.MAX_VALUE ? null : CellLocation.from(mcc, mnc, cid, lac)
         );
     }
 
-
-    private CellModel(String cellId, CellType type, CellState state, String mobileCountryCode, String mobileNetworkId, String locationAreaCode, int signalStrengthDbm) {
+    private CellModel(String cellId, CellType type, CellState state, String mobileCountryCode, String mobileNetworkId, String locationAreaCode, int signalStrengthDbm, CellLocation location) {
         this.cellId = cellId;
         this.type = type;
         this.state = state;
@@ -97,6 +116,7 @@ public class CellModel {
         this.mobileNetworkId = mobileNetworkId;
         this.locationAreaCode = locationAreaCode;
         this.signalStrengthDbm = signalStrengthDbm;
+        this.location = location;
     }
 
     public String getCellId() {
