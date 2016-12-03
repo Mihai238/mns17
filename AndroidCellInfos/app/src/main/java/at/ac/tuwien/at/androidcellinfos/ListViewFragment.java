@@ -63,8 +63,8 @@ public class ListViewFragment extends Fragment {
 
                         // Clearing old content
 
-                        //this.activeContainer.removeAllViews();
-                        //this.neighbourContainer.removeAllViews();
+                        this.activeContainer.removeAllViews();
+                        this.neighbourContainer.removeAllViews();
                         Log.i(TAG, "Deleted all previous Views");
 
                         // Insert new content
@@ -75,9 +75,9 @@ public class ListViewFragment extends Fragment {
                             Log.i(TAG, "Inserting Cell with id " + model.getCellId());
 
                             if (model.getState() == CellModel.CellState.ACTIVE) {
-                                //this.activeContainer.addView(cellId);
+                                this.activeContainer.addView(cellId);
                             } else {
-                                //this.neighbourContainer.addView(cellId);
+                                this.neighbourContainer.addView(cellId);
                             }
 
                         }
