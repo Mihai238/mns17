@@ -6,5 +6,5 @@
     <string name="list_view_text">This is the list view !!</string>
     <string name="map_view_text">This is the MAP view !!</string>
     <string name="active_cell">Active Cell</string>
-    <string name="neightbour_cells">Neightbour Cells</string>
+    <string name="neightbour_cells">Neighbour Cells</string>
 </resources>

@@ -23,6 +23,7 @@ public class ListViewFragment extends Fragment {
 
     private CellModelWatcher cellModelWatcher;
     LinearLayout activeContainer;
+    LinearLayout neighbourContainer;
 
 
     public static ListViewFragment newInstance() {
@@ -40,26 +41,48 @@ public class ListViewFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        View rootview = getView();
-        if( rootview != null ) {
-            this.activeContainer = (LinearLayout) rootview.findViewById(R.id.active_container);
-        }
-        else {
-            Log.e(TAG, "Unable to detect root view of Fragment");
-        }
+        if( cellModelWatcher == null ) {
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        cellModelWatcher = new CellModelWatcher(telephonyManager);
+            View rootview = getView();
+            if( rootview != null && this.activeContainer == null && this.neighbourContainer == null ) {
+                this.activeContainer = (LinearLayout) rootview.findViewById(R.id.active_container);
+                this.neighbourContainer = (LinearLayout) rootview.findViewById(R.id.neighbour_container);
+            }
+            else {
+                Log.e(TAG, "Unable to detect root view of Fragment");
+            }
 
-        cellModelWatcher.watch()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .forEach(cellInfo -> {
-                    Log.i(TAG, "Got: " + cellInfo);
-                    TextView cellId = new TextView(getActivity());
-                    cellId.setText(cellInfo.get(0).getCellId());
-                    this.activeContainer.addView(cellId);
-                });
+            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            cellModelWatcher = new CellModelWatcher(telephonyManager);
+
+            cellModelWatcher.watch()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .forEach(cellInfo -> {
+                        Log.i(TAG, "Found " + cellInfo.size() + " cells");
+
+                        // Clearing old content
+
+                        //this.activeContainer.removeAllViews();
+                        //this.neighbourContainer.removeAllViews();
+                        Log.i(TAG, "Deleted all previous Views");
+
+                        // Insert new content
+                        for (CellModel model : cellInfo) {
+                            TextView cellId = new TextView(getActivity());
+                            cellId.setText(model.getCellId());
+
+                            Log.i(TAG, "Inserting Cell with id " + model.getCellId());
+
+                            if (model.getState() == CellModel.CellState.ACTIVE) {
+                                //this.activeContainer.addView(cellId);
+                            } else {
+                                //this.neighbourContainer.addView(cellId);
+                            }
+
+                        }
+                    });
+        }
     }
 
     @Override
