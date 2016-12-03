@@ -147,6 +147,10 @@ public class CellModel {
         return signalStrengthDbm;
     }
 
+    public CellLocation getLocation() {
+        return location;
+    }
+
     @Override
     public String toString() {
         return "CellModel{" +
@@ -157,6 +161,7 @@ public class CellModel {
                 ", mobileNetworkId='" + mobileNetworkId + '\'' +
                 ", locationAreaCode='" + locationAreaCode + '\'' +
                 ", signalStrengthDbm=" + signalStrengthDbm +
+                ", location=" + location +
                 '}';
     }
 }

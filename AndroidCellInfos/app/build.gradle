@@ -24,6 +24,10 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    packagingOptions {
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+    }
 }
 
 dependencies {
@@ -41,6 +45,9 @@ dependencies {
     // butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
 
     testCompile 'junit:junit:4.12'
 }
