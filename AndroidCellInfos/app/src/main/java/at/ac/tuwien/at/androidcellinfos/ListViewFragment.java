@@ -11,28 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class ListViewFragment extends Fragment {
 
     private static final String TAG = "ListViewFragment";
 
-    private CellInfoProvider cellInfoProvider;
+    private CellModelWatcher cellModelWatcher;
 
     public static ListViewFragment newInstance() {
         return new ListViewFragment();
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        cellInfoProvider = new CellInfoProvider((TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE));
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
-
-        cellInfoProvider.getObservable()
-                .forEach(cellInfo -> Log.i(TAG, "Got: " + cellInfo));
 
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         textView.setText(R.string.list_view_text);
@@ -40,6 +35,23 @@ public class ListViewFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        cellModelWatcher = new CellModelWatcher(telephonyManager);
 
+        cellModelWatcher.watch()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .forEach(cellInfo -> Log.i(TAG, "Got: " + cellInfo));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        cellModelWatcher.close();
+    }
 }
