@@ -2,7 +2,6 @@ package at.ac.tuwien.at.androidcellinfos;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -12,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import rx.Scheduler;
+import at.ac.tuwien.at.androidcellinfos.service.CellModel;
+import at.ac.tuwien.at.androidcellinfos.service.CellModelWatcher;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 

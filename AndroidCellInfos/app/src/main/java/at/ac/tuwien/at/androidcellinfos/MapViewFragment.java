@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import at.ac.tuwien.at.androidcellinfos.service.CellModelWatcher;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 

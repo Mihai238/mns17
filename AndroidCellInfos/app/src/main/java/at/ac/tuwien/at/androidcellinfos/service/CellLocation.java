@@ -1,4 +1,4 @@
-package at.ac.tuwien.at.androidcellinfos;
+package at.ac.tuwien.at.androidcellinfos.service;
 
 import android.util.Log;
 
