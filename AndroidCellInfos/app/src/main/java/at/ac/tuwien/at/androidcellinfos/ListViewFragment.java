@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -20,6 +22,9 @@ public class ListViewFragment extends Fragment {
     private static final String TAG = "ListViewFragment";
 
     private CellModelWatcher cellModelWatcher;
+    LinearLayout activeContainer;
+    LinearLayout neighbourContainer;
+
 
     public static ListViewFragment newInstance() {
         return new ListViewFragment();
@@ -29,9 +34,6 @@ public class ListViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
 
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(R.string.list_view_text);
-
         return rootView;
     }
 
@@ -39,13 +41,48 @@ public class ListViewFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        cellModelWatcher = new CellModelWatcher(telephonyManager);
+        if( cellModelWatcher == null ) {
 
-        cellModelWatcher.watch()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .forEach(cellInfo -> Log.i(TAG, "Got: " + cellInfo));
+            View rootview = getView();
+            if( rootview != null && this.activeContainer == null && this.neighbourContainer == null ) {
+                this.activeContainer = (LinearLayout) rootview.findViewById(R.id.active_container);
+                this.neighbourContainer = (LinearLayout) rootview.findViewById(R.id.neighbour_container);
+            }
+            else {
+                Log.e(TAG, "Unable to detect root view of Fragment");
+            }
+
+            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            cellModelWatcher = new CellModelWatcher(telephonyManager);
+
+            cellModelWatcher.watch()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .forEach(cellInfo -> {
+                        Log.i(TAG, "Found " + cellInfo.size() + " cells");
+
+                        // Clearing old content
+
+                        this.activeContainer.removeAllViews();
+                        this.neighbourContainer.removeAllViews();
+                        Log.i(TAG, "Deleted all previous Views");
+
+                        // Insert new content
+                        for (CellModel model : cellInfo) {
+                            TextView cellId = new TextView(getActivity());
+                            cellId.setText(model.getCellId());
+
+                            Log.i(TAG, "Inserting Cell with id " + model.getCellId());
+
+                            if (model.getState() == CellModel.CellState.ACTIVE) {
+                                this.activeContainer.addView(cellId);
+                            } else {
+                                this.neighbourContainer.addView(cellId);
+                            }
+
+                        }
+                    });
+        }
     }
 
     @Override

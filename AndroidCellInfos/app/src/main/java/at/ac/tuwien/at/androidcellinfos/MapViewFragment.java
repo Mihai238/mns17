@@ -31,10 +31,7 @@ public class MapViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
-
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(R.string.map_view_text);
+        View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         return rootView;
     }
