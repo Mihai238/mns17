@@ -16,9 +16,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.container)
     ViewPager mViewPager;
-    @BindView(R.id.tabs)
     TabLayout tabLayout;
 
     @Override
@@ -29,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        mViewPager = (ViewPager) findViewById(R.id.container);
 
         initializeTabs();
 

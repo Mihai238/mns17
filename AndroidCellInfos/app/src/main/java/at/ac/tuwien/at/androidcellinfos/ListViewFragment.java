@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -20,6 +22,8 @@ public class ListViewFragment extends Fragment {
     private static final String TAG = "ListViewFragment";
 
     private CellModelWatcher cellModelWatcher;
+    LinearLayout activeContainer;
+
 
     public static ListViewFragment newInstance() {
         return new ListViewFragment();
@@ -29,9 +33,6 @@ public class ListViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_view, container, false);
 
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(R.string.list_view_text);
-
         return rootView;
     }
 
@@ -39,13 +40,26 @@ public class ListViewFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        View rootview = getView();
+        if( rootview != null ) {
+            this.activeContainer = (LinearLayout) rootview.findViewById(R.id.active_container);
+        }
+        else {
+            Log.e(TAG, "Unable to detect root view of Fragment");
+        }
+
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         cellModelWatcher = new CellModelWatcher(telephonyManager);
 
         cellModelWatcher.watch()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .forEach(cellInfo -> Log.i(TAG, "Got: " + cellInfo));
+                .forEach(cellInfo -> {
+                    Log.i(TAG, "Got: " + cellInfo);
+                    TextView cellId = new TextView(getActivity());
+                    cellId.setText(cellInfo.get(0).getCellId());
+                    this.activeContainer.addView(cellId);
+                });
     }
 
     @Override

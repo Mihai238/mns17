@@ -5,4 +5,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="list_view_text">This is the list view !!</string>
     <string name="map_view_text">This is the MAP view !!</string>
+    <string name="active_cell">Active Cell</string>
 </resources>
