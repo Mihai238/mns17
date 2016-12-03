@@ -23,16 +23,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
-        android:id="@+id/textView4"
+        android:id="@+id/active_header_text"
         android:layout_alignBottom="@+id/active_cell_header"
         android:layout_centerHorizontal="true"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:fontFamily="sans-serif?attr/textColorPrimary"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/active_container"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/active_cell_header"
+        android:layout_centerHorizontal="true" >
+
+    </LinearLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_below="@+id/active_container"
+        android:id="@+id/neighbour_header" />
+
+    <TextView
+        android:text="@string/neightbour_cells"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:id="@+id/neighbour_header_text"
+        android:layout_alignBottom="@+id/neighbour_header"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:fontFamily="sans-serif?attr/textColorPrimary"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/neighbour_container"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/neighbour_header"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
