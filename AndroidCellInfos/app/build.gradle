@@ -49,5 +49,7 @@ dependencies {
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
 
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+
     testCompile 'junit:junit:4.12'
 }
