@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,67 +8,75 @@
     android:paddingTop="0dp"
     tools:context="at.ac.tuwien.at.androidcellinfos.ListViewFragment">
 
-    <android.support.v7.widget.Toolbar
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/active_cell_header" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:text="@string/active_cell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:id="@+id/active_header_text"
-        android:layout_alignBottom="@+id/active_cell_header"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:fontFamily="sans-serif?attr/textColorPrimary"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/active_cell_header" />
 
-    <LinearLayout
-        android:id="@+id/active_container"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/active_cell_header"
-        android:layout_centerHorizontal="true" >
+        <TextView
+            android:text="@string/active_cell"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:id="@+id/active_header_text"
+            android:layout_alignBottom="@+id/active_cell_header"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:fontFamily="sans-serif?attr/textColorPrimary"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:paddingLeft="40dp"
+            android:layout_centerHorizontal="false" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/active_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/active_cell_header"
+            android:layout_centerHorizontal="true" >
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_below="@+id/active_container"
-        android:id="@+id/neighbour_header" />
+        </LinearLayout>
 
-    <TextView
-        android:text="@string/neightbour_cells"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:id="@+id/neighbour_header_text"
-        android:layout_alignBottom="@+id/neighbour_header"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:fontFamily="sans-serif?attr/textColorPrimary"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_below="@+id/active_container"
+            android:id="@+id/neighbour_header" />
 
-    <LinearLayout
-        android:id="@+id/neighbour_container"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/neighbour_header"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:text="@string/neightbour_cells"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:id="@+id/neighbour_header_text"
+            android:layout_alignBottom="@+id/neighbour_header"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:fontFamily="sans-serif?attr/textColorPrimary"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:paddingLeft="40dp" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:id="@+id/neighbour_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/neighbour_header"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+</ScrollView>

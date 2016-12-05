@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -68,6 +70,10 @@ public class ListViewFragment extends Fragment {
                     // Insert new content
                     for (CellModel model : cellInfo) {
 
+                        if( model.getCellId().equals("-1") ) {
+                            continue;
+                        }
+
                         LinearLayout group = new LinearLayout(getActivity());
                         // Create the main View
                         group.setOrientation(LinearLayout.VERTICAL);
@@ -102,6 +108,24 @@ public class ListViewFragment extends Fragment {
                         String mniText = "Mobile Network ID: " + model.getMobileNetworkId();
                         mobileNetworkId.setText(mniText);
                         subgroup.addView(mobileNetworkId);
+
+                        ImageView signal = new ImageView(getActivity());
+                        int imgid = R.drawable.signal_bars_5;
+                        if( model.getSignalStrengthDbm() < -90 ) {
+                            imgid = R.drawable.signal_bars_1;
+                        }
+                        else if( model.getSignalStrengthDbm() < -85 ) {
+                            imgid = R.drawable.signal_bars_2;
+                        }
+                        else if( model.getSignalStrengthDbm() < -70 ) {
+                            imgid = R.drawable.signal_bars_3;
+                        }
+                        else if( model.getSignalStrengthDbm() < -75 ) {
+                            imgid = R.drawable.signal_bars_4;
+                        }
+                        signal.setImageDrawable(ContextCompat.getDrawable(getContext(), imgid));
+                        signal.setLayoutParams(new ViewGroup.LayoutParams(60,60));
+                        subgroup.addView(signal);
 
                         subgroup.setVisibility(View.GONE);
                         subgroup.setPadding(60,20,0,0);
