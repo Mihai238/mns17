@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import at.ac.tuwien.at.androidcellinfos.components.ParentItem;
 import at.ac.tuwien.at.androidcellinfos.service.CellModel;
 import at.ac.tuwien.at.androidcellinfos.service.CellModelWatcher;
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,22 +59,49 @@ public class ListViewFragment extends Fragment {
                     Log.i(TAG, "Found " + cellInfo.size() + " cells");
 
                     // Clearing old content
-
                     this.activeContainer.removeAllViews();
                     this.neighbourContainer.removeAllViews();
                     Log.i(TAG, "Deleted all previous Views");
 
                     // Insert new content
                     for (CellModel model : cellInfo) {
+
+                        LinearLayout group = new LinearLayout(getActivity());
+
+                        // Create the main View
                         TextView cellId = new TextView(getActivity());
                         cellId.setText(model.getCellId());
+                        group.addView(cellId);
+
+                        // Create the View shown on expand
+                        TextView details = new TextView(getActivity());
+                        details.append(model.getType().name() + "\r\n");
+                        details.append(model.getMobileCountryCode() + "\r\n");
+                        details.append(model.getLocationAreaCode() + "\r\n");
+                        details.append(model.getMobileNetworkId() + "\r\n");
+                        details.setVisibility(View.GONE);
+                        cellId.setOnClickListener(v -> {
+                            switch (details.getVisibility()) {
+                                case View.VISIBLE :
+                                    details.setVisibility(View.GONE);
+                                    break;
+                                case View.GONE :
+                                    details.setVisibility(View.VISIBLE);
+                                    break;
+                                default:
+                                    Log.w(TAG, "Details View was in unexpected state: " + details.getVisibility());
+                                    break;
+                            }
+                        });
+                        group.addView(details);
+
 
                         Log.i(TAG, "Inserting Cell with id " + model.getCellId());
 
                         if (model.getState() == CellModel.CellState.ACTIVE) {
-                            this.activeContainer.addView(cellId);
+                            this.activeContainer.addView(group);
                         } else {
-                            this.neighbourContainer.addView(cellId);
+                            this.neighbourContainer.addView(group);
                         }
 
                     }
