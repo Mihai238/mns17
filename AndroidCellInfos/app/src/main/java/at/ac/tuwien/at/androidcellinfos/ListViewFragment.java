@@ -1,6 +1,7 @@
 package at.ac.tuwien.at.androidcellinfos;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import at.ac.tuwien.at.androidcellinfos.components.ParentItem;
 import at.ac.tuwien.at.androidcellinfos.service.CellModel;
 import at.ac.tuwien.at.androidcellinfos.service.CellModelWatcher;
 import rx.android.schedulers.AndroidSchedulers;
@@ -69,31 +69,47 @@ public class ListViewFragment extends Fragment {
                         LinearLayout group = new LinearLayout(getActivity());
 
                         // Create the main View
+                        group.setOrientation(LinearLayout.VERTICAL);
                         TextView cellId = new TextView(getActivity());
                         cellId.setText(model.getCellId());
                         group.addView(cellId);
 
                         // Create the View shown on expand
-                        TextView details = new TextView(getActivity());
-                        details.append(model.getType().name() + "\r\n");
-                        details.append(model.getMobileCountryCode() + "\r\n");
-                        details.append(model.getLocationAreaCode() + "\r\n");
-                        details.append(model.getMobileNetworkId() + "\r\n");
-                        details.setVisibility(View.GONE);
-                        cellId.setOnClickListener(v -> {
-                            switch (details.getVisibility()) {
+                        LinearLayout subgroup = new LinearLayout(getActivity());
+                        subgroup.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView type = new TextView(getActivity());
+                        type.setText(model.getType().name());
+                        subgroup.addView(type);
+
+                        TextView mobileCountryCode = new TextView(getActivity());
+                        mobileCountryCode.setText(model.getMobileCountryCode());
+                        subgroup.addView(mobileCountryCode);
+
+                        TextView locationAreaCode = new TextView(getActivity());
+                        locationAreaCode.setText(model.getLocationAreaCode());
+                        subgroup.addView(locationAreaCode);
+
+                        TextView mobileNetworkId = new TextView(getActivity());
+                        mobileCountryCode.setText(model.getMobileNetworkId());
+                        subgroup.addView(mobileNetworkId);
+
+                        subgroup.setVisibility(View.GONE);
+                        group.addView(subgroup);
+
+                        group.setOnClickListener(v -> {
+                            switch (subgroup.getVisibility()) {
                                 case View.VISIBLE :
-                                    details.setVisibility(View.GONE);
+                                    subgroup.setVisibility(View.GONE);
                                     break;
                                 case View.GONE :
-                                    details.setVisibility(View.VISIBLE);
+                                    subgroup.setVisibility(View.VISIBLE);
                                     break;
                                 default:
-                                    Log.w(TAG, "Details View was in unexpected state: " + details.getVisibility());
+                                    Log.w(TAG, "Details View was in unexpected state: " + subgroup.getVisibility());
                                     break;
                             }
                         });
-                        group.addView(details);
 
 
                         Log.i(TAG, "Inserting Cell with id " + model.getCellId());
