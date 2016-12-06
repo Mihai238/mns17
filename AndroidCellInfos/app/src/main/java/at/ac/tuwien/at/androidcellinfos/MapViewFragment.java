@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import at.ac.tuwien.at.androidcellinfos.service.CellModel;
 import at.ac.tuwien.at.androidcellinfos.service.CellModelWatcher;
-import at.ac.tuwien.at.androidcellinfos.service.MarkerContainer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -34,11 +33,9 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "MapViewFragment";
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    private static final String MARKERCONTAINER_KEY = "MarkerContainerBundleKey";
 
     private CellModelWatcher cellModelWatcher;
     MapView mapView;
-    MarkerContainer markerContainer;
 
     public static MapViewFragment newInstance() {
         return new MapViewFragment();
@@ -52,12 +49,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
-
-        if ((savedInstanceState != null) && (savedInstanceState.getSerializable(MARKERCONTAINER_KEY) != null)) {
-            this.markerContainer = savedInstanceState.getParcelable(MARKERCONTAINER_KEY);
-        } else {
-            this.markerContainer = new MarkerContainer();
-        }
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -155,7 +146,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                     Log.i(TAG, "Found " + cellInfo.size() + " cells");
 
                     // remove old markers
-                    markerContainer.removeMarkers();
+                    googleMap.clear();
 
                     Log.i(TAG, "Deleted all previous Markers");
 
@@ -175,8 +166,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
                         // create marker
                         MarkerOptions markerOptions = new MarkerOptions().position(position).title(state).snippet(payload);
-                        Marker marker = googleMap.addMarker(markerOptions);
-                        markerContainer.addMarker(marker);
+                        googleMap.addMarker(markerOptions);
 
                         i += 10; // need for mocked LatLng if CellLocation is null
                     }
@@ -192,8 +182,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         }
 
         mapView.onSaveInstanceState(mapViewBundle);
-
-        outState.putParcelable(MARKERCONTAINER_KEY, this.markerContainer);
 
         super.onSaveInstanceState(outState);
     }
