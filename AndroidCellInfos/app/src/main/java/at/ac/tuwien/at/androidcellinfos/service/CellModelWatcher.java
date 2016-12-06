@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,7 @@ public class CellModelWatcher implements Serializable {
         return watch(30, TimeUnit.SECONDS);
     }
 
-    public Observable<List<CellModel>> watch(long interval, TimeUnit unit) {
+    private Observable<List<CellModel>> watch(long interval, TimeUnit unit) {
         return Observable.create(subscriber -> {
             Log.d(TAG, "Watch started");
 
@@ -41,7 +42,7 @@ public class CellModelWatcher implements Serializable {
             while (!watcherThread.isInterrupted()) {
                 List<CellModel> cells = new ArrayList<>();
 
-                for (CellInfo info : telephonyManager.getAllCellInfo()) {
+                for (CellInfo info : getCellInfoList()) {
                     cells.add(CellModel.from(info));
                 }
 
@@ -61,6 +62,11 @@ public class CellModelWatcher implements Serializable {
             subscriber.onCompleted();
             closedSignal.countDown();
         });
+    }
+
+    private List<CellInfo> getCellInfoList() {
+        List<CellInfo> allCellInfo = telephonyManager.getAllCellInfo();
+        return allCellInfo == null ? Collections.emptyList() : allCellInfo;
     }
 
     public void close() {
