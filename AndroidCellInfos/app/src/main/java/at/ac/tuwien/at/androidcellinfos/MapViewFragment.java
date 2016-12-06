@@ -159,10 +159,13 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
                     Log.i(TAG, "Deleted all previous Markers");
 
-                    int i = -30; // debug
+                    int i = -30; // need for mocked LatLng if CellLocation is null
                     for (CellModel model : cellInfo) {
                         // retrieve cell information
-                        LatLng position = new LatLng(0,i);//new LatLng(model.getLocation().getLatitude(), model.getLocation().getLongitude());
+                        LatLng position = new LatLng(0,i); // assign mocked LatLng to position
+                        if (model.getLocation() != null) { // don't mock if CellLocation is not null
+                            position = new LatLng(model.getLocation().getLatitude(), model.getLocation().getLongitude());
+                        }
                         String state = model.getState() == CellModel.CellState.ACTIVE ? "Active Cell" : "Neighbour Cell";
                         String info = "Cell type: " + model.getType().name() + "\n"
                                 +     "Mobile Country Code: " + model.getMobileCountryCode() + "\n"
@@ -175,7 +178,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                         Marker marker = googleMap.addMarker(markerOptions);
                         markerContainer.addMarker(marker);
 
-                        i += 10; // debug
+                        i += 10; // need for mocked LatLng if CellLocation is null
                     }
                 });
     }
