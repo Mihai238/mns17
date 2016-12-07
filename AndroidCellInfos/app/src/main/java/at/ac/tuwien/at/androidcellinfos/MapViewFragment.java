@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -164,8 +166,28 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                                 +     "Mobile Network ID: " + model.getMobileNetworkId();
                         String payload = model.getSignalStrengthDbm() + ";" + info;
 
+                        float iconValue;
+                        switch (model.getType()) {
+                            case GSM:
+                                iconValue = BitmapDescriptorFactory.HUE_ORANGE;
+                                break;
+                            case CDMA:
+                                iconValue = BitmapDescriptorFactory.HUE_BLUE;
+                                break;
+                            case UMTS:
+                                iconValue = BitmapDescriptorFactory.HUE_GREEN;
+                                break;
+                            case LTE:
+                                iconValue = BitmapDescriptorFactory.HUE_ROSE;
+                                break;
+                            default:
+                                // should not be possible
+                                iconValue = BitmapDescriptorFactory.HUE_RED;
+                        }
+                        BitmapDescriptor markerIcon = BitmapDescriptorFactory.defaultMarker(iconValue);
+
                         // create marker
-                        MarkerOptions markerOptions = new MarkerOptions().position(position).title(state).snippet(payload);
+                        MarkerOptions markerOptions = new MarkerOptions().position(position).title(state).snippet(payload).icon(markerIcon);
                         googleMap.addMarker(markerOptions);
 
                         i += 10; // need for mocked LatLng if CellLocation is null
