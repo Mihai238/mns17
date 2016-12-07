@@ -8,7 +8,7 @@ import org.simpleframework.xml.Root;
 public class Rsp {
     @Attribute
     String stat;
-    @Element
+    @Element(required = false)
     Cell cell;
 
     @Override

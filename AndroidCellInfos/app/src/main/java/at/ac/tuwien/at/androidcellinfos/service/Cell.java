@@ -3,31 +3,31 @@ package at.ac.tuwien.at.androidcellinfos.service;
 import org.simpleframework.xml.Attribute;
 
 public class Cell {
-    @Attribute
+    @Attribute(required = false)
     double lat;
-    @Attribute
+    @Attribute(required = false)
     double lon;
-    @Attribute
+    @Attribute(required = false)
     int mcc;
-    @Attribute
+    @Attribute(required = false)
     int mnc;
-    @Attribute
+    @Attribute(required = false)
     int lac;
-    @Attribute
+    @Attribute(required = false)
     int cellid;
-    @Attribute
+    @Attribute(required = false)
     int averageSignalStrength;
-    @Attribute
+    @Attribute(required = false)
     int range;
-    @Attribute
+    @Attribute(required = false)
     int samples;
-    @Attribute
+    @Attribute(required = false)
     int changeable;
-    @Attribute
+    @Attribute(required = false)
     String radio;
-    @Attribute
+    @Attribute(required = false)
     int rnc;
-    @Attribute
+    @Attribute(required = false)
     int cid;
 
     @Override
