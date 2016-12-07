@@ -2,6 +2,7 @@ package at.ac.tuwien.at.androidcellinfos;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import at.ac.tuwien.at.androidcellinfos.service.CellModel;
@@ -75,15 +77,26 @@ public class ListViewFragment extends Fragment {
                         }
 
                         LinearLayout group = new LinearLayout(getActivity());
+                        RelativeLayout elem = new RelativeLayout(getActivity());
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams
+                                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
                         // Create the main View
                         group.setOrientation(LinearLayout.VERTICAL);
-                        group.setPadding(50,30,0,30);
+                        group.setPadding(50,30,50,30);
                         TextView cellId = (TextView) getActivity().getLayoutInflater().inflate(R.layout.exp_text_view_top_template, null);
                         cellId.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         cellId.setGravity(Gravity.NO_GRAVITY);
                         String cellidText = "CellID: " + model.getCellId();
                         cellId.setText(cellidText);
-                        group.addView(cellId);
+
+                        // Add Dropdown indicator
+                        ImageView dropdown = new ImageView(getActivity());
+                        dropdown.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.right_arrow));
+                        elem.addView(cellId);
+                        elem.addView(dropdown, lp);
+                        group.addView(elem);
 
                         // Create the View shown on expand
                         LinearLayout subgroup = new LinearLayout(getActivity());
@@ -135,9 +148,11 @@ public class ListViewFragment extends Fragment {
                             switch (subgroup.getVisibility()) {
                                 case View.VISIBLE :
                                     subgroup.setVisibility(View.GONE);
+                                    dropdown.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.right_arrow));
                                     break;
                                 case View.GONE :
                                     subgroup.setVisibility(View.VISIBLE);
+                                    dropdown.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.down_arrow));
                                     break;
                                 default:
                                     Log.w(TAG, "Details View was in unexpected state: " + subgroup.getVisibility());
