@@ -27,7 +27,7 @@ class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_1, parent, false);
+                .inflate(R.layout.report_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -37,7 +37,7 @@ class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.ViewHolder> {
         Report report = reports.get(position);
 
         holder.view.setOnClickListener(new ReportSelectionListenerAdapter(report));
-        holder.textView.setText(SimpleDateFormat.getInstance().format(new Date(report.getTimestamp())));
+        holder.textView.setText(report.toString());
     }
 
     @Override

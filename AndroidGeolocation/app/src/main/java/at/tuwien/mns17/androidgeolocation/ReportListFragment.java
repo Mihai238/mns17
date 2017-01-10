@@ -3,6 +3,7 @@ package at.tuwien.mns17.androidgeolocation;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,9 +19,6 @@ import at.tuwien.mns17.androidgeolocation.report.ReportRepositoryImpl;
 public class ReportListFragment extends Fragment {
 
     private ReportSelectionListener reportSelectionListener;
-
-    public ReportListFragment() {
-    }
 
     public static ReportListFragment newInstance() {
         return new ReportListFragment();
@@ -66,8 +64,8 @@ public class ReportListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            //TODO: query location and create new location report
-            Log.d("ReportList", "Create new report");
+            Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 }
