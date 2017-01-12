@@ -6,10 +6,22 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class LocationReport implements Serializable {
+
+    private static Long currentId = 1L;
+
+    private Long id = currentId++;
     private Long timestamp = Calendar.getInstance().getTimeInMillis();
+
+    public String getName() {
+        return "Location report #" + id;
+    }
+
+    public String getTime() {
+        return SimpleDateFormat.getInstance().format(new Date(timestamp));
+    }
 
     @Override
     public String toString() {
-        return "LocationReport " + SimpleDateFormat.getInstance().format(new Date(timestamp));
+        return getName() + ", at " + getTime();
     }
 }

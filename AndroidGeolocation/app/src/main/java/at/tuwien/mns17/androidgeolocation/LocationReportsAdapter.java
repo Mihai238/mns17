@@ -54,7 +54,8 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
         LocationReport locationReport = locationReports.get(position);
 
         holder.view.setOnClickListener(new LocationReportSelectionListenerAdapter(locationReport));
-        holder.textView.setText(locationReport.toString());
+        holder.title.setText(locationReport.getName());
+        holder.subtitle.setText(locationReport.getTime());
     }
 
     @Override
@@ -65,12 +66,14 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         final View view;
-        final TextView textView;
+        final TextView title;
+        final TextView subtitle;
 
         ViewHolder(View view) {
             super(view);
             this.view = view;
-            this.textView = (TextView) view.findViewById(android.R.id.text1);
+            this.title = (TextView) view.findViewById(R.id.title);
+            this.subtitle = (TextView) view.findViewById(R.id.subtitle);
         }
     }
 
