@@ -5,4 +5,6 @@ import java.util.List;
 public interface LocationReportRepository {
 
     List<LocationReport> findAll();
+
+    void save(LocationReport report);
 }

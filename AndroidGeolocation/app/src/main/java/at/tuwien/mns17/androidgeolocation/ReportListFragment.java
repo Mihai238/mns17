@@ -13,11 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportFactory;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportFactoryImpl;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepository;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepositoryImpl;
+import rx.functions.Action1;
 
 public class ReportListFragment extends Fragment {
 
     private LocationReportSelectionListener locationReportSelectionListener;
+
+    private LocationReportFactory locationReportFactory = new LocationReportFactoryImpl();
+
+    private LocationReportRepository locationReportRepository = new LocationReportRepositoryImpl();
+
+    private LocationReportsAdapter locationReportsAdapter;
 
     public static ReportListFragment newInstance() {
         return new ReportListFragment();
@@ -34,7 +45,10 @@ public class ReportListFragment extends Fragment {
 
         RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.location_reports_recycler_view);
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        reportsRecyclerView.setAdapter(new LocationReportsAdapter(new LocationReportRepositoryImpl(), locationReportSelectionListener));
+        locationReportsAdapter = LocationReportsAdapter.create()
+                .with(locationReportSelectionListener)
+                .update(locationReportRepository.findAll());
+        reportsRecyclerView.setAdapter(locationReportsAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new CreateReportListener());
@@ -62,9 +76,18 @@ public class ReportListFragment extends Fragment {
     private class CreateReportListener implements View.OnClickListener {
 
         @Override
-        public void onClick(View view) {
-            Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+        public void onClick(final View view) {
+            locationReportFactory.createLocationReport()
+                    .subscribe(new Action1<LocationReport>() {
+                        @Override
+                        public void call(LocationReport report) {
+                            locationReportRepository.save(report);
+
+                            Snackbar.make(view, "Location report created", Snackbar.LENGTH_LONG).show();
+
+                            locationReportsAdapter.update(locationReportRepository.findAll());
+                        }
+                    });
         }
     }
 }

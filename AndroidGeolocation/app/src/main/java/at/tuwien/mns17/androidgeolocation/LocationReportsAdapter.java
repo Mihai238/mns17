@@ -1,6 +1,7 @@
 package at.tuwien.mns17.androidgeolocation;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,35 @@ import android.widget.TextView;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
-import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepository;
 
 
 class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter.ViewHolder> {
 
+    private static final String TAG = LocationReportsAdapter.class.getName();
+
     private LocationReportSelectionListener locationReportSelectionListener;
     private List<LocationReport> locationReports;
 
-    LocationReportsAdapter(LocationReportRepository locationReportRepository,
-                           LocationReportSelectionListener locationReportSelectionListener) {
+    private LocationReportsAdapter() {
+
+    }
+
+    public static LocationReportsAdapter create() {
+        return new LocationReportsAdapter();
+    }
+
+    public LocationReportsAdapter with(LocationReportSelectionListener locationReportSelectionListener) {
         this.locationReportSelectionListener = locationReportSelectionListener;
-        this.locationReports = locationReportRepository.findAll();
+        return this;
+    }
+
+    public LocationReportsAdapter update(List<LocationReport> locationReports) {
+        Log.d(TAG, "Updated with " + locationReports.size() + " location reports");
+
+        this.locationReports = locationReports;
+        notifyDataSetChanged();
+
+        return this;
     }
 
     @Override
