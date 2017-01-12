@@ -11,19 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import at.tuwien.mns17.androidgeolocation.report.Report;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
 
-public class ReportDetailsFragment extends Fragment {
+public class LocationReportDetailsFragment extends Fragment {
 
-    private static final String REPORT_ARG = "report";
+    private static final String LOCATION_REPORT_ARG = "locationReport";
 
-    private Report report;
+    private LocationReport locationReport;
 
-    public static ReportDetailsFragment newInstance(Report report) {
-        ReportDetailsFragment fragment = new ReportDetailsFragment();
+    public static LocationReportDetailsFragment newInstance(LocationReport locationReport) {
+        LocationReportDetailsFragment fragment = new LocationReportDetailsFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable(REPORT_ARG, report);
+        args.putSerializable(LOCATION_REPORT_ARG, locationReport);
         fragment.setArguments(args);
 
         return fragment;
@@ -32,20 +32,20 @@ public class ReportDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        report = (Report) getArguments().getSerializable(REPORT_ARG);
+        locationReport = (LocationReport) getArguments().getSerializable(LOCATION_REPORT_ARG);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_report_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_location_report_details, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitle("Report");
+        toolbar.setTitle("Location report");
 
         TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(report.toString());
+        textView.setText(locationReport.toString());
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new SendMailListener());

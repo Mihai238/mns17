@@ -9,16 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import at.tuwien.mns17.androidgeolocation.report.ReportRepositoryImpl;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepositoryImpl;
 
 public class ReportListFragment extends Fragment {
 
-    private ReportSelectionListener reportSelectionListener;
+    private LocationReportSelectionListener locationReportSelectionListener;
 
     public static ReportListFragment newInstance() {
         return new ReportListFragment();
@@ -27,15 +26,15 @@ public class ReportListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_report_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_location_report_list, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle(getActivity().getTitle());
 
-        RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.reports_recycler_view);
+        RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.location_reports_recycler_view);
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        reportsRecyclerView.setAdapter(new ReportsAdapter(new ReportRepositoryImpl(), reportSelectionListener));
+        reportsRecyclerView.setAdapter(new LocationReportsAdapter(new LocationReportRepositoryImpl(), locationReportSelectionListener));
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new CreateReportListener());
@@ -46,18 +45,18 @@ public class ReportListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ReportSelectionListener) {
-            reportSelectionListener = (ReportSelectionListener) context;
+        if (context instanceof LocationReportSelectionListener) {
+            locationReportSelectionListener = (LocationReportSelectionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement ReportSelectionListener");
+                    + " must implement LocationReportSelectionListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        reportSelectionListener = null;
+        locationReportSelectionListener = null;
     }
 
     private class CreateReportListener implements View.OnClickListener {

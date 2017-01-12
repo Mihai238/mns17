@@ -4,12 +4,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
-import at.tuwien.mns17.androidgeolocation.report.Report;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
 
 public class MainActivity extends AppCompatActivity
-        implements ReportSelectionListener, FragmentManager.OnBackStackChangedListener {
+        implements LocationReportSelectionListener, FragmentManager.OnBackStackChangedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +25,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onReportSelected(Report report) {
+    public void onLocationReportSelected(LocationReport locationReport) {
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                .replace(R.id.fragment_container, ReportDetailsFragment.newInstance(report))
-                .addToBackStack("report-details")
+                .replace(R.id.fragment_container, LocationReportDetailsFragment.newInstance(locationReport))
+                .addToBackStack("location-report-details")
                 .commit();
     }
 
