@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -10,9 +10,61 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="at.ac.tuwien.mns17.java8example.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/user_container"></LinearLayout>
-</RelativeLayout>
+        android:id="@+id/user_container"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:text="@string/run_codesample_a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sample_a" />
+
+            <Button
+                android:text="@string/run_codesample_b"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sample_b" />
+
+            <Button
+                android:text="@string/run_codesample_c"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sample_c" />
+
+            <Button
+                android:text="@string/run_codesample_d"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sample_d" />
+
+            <Button
+                android:text="@string/run_codesample_e"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sample_e" />
+
+            <TextView
+                android:text="@string/result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/result"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/resultText" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

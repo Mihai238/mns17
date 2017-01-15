@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Java8Example</string>
+    <string name="run_codesample_a">Run Codesample A</string>
+    <string name="run_codesample_b">Run Codesample B</string>
+    <string name="run_codesample_c">Run Codesample C</string>
+    <string name="run_codesample_d">Run Codesample D</string>
+    <string name="run_codesample_e">Run Codesample E</string>
+    <string name="result">Result:</string>
 </resources>
