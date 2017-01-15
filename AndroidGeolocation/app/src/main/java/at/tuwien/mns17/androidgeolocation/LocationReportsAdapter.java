@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSender;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepository;
 
 
@@ -23,13 +23,16 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
     private static final String TAG = LocationReportsAdapter.class.getName();
 
     private final LocationReportRepository locationReportRepository;
-    private LocationReportSelectionListener locationReportSelectionListener;
+    private final LocationReportEmailSender locationReportEmailSender;
+    private final LocationReportSelectionListener locationReportSelectionListener;
     private List<LocationReport> locationReports;
 
     public LocationReportsAdapter(LocationReportRepository locationReportRepository,
+                                  LocationReportEmailSender locationReportEmailSender,
                                   LocationReportSelectionListener locationReportSelectionListener) {
 
         this.locationReportRepository = locationReportRepository;
+        this.locationReportEmailSender = locationReportEmailSender;
         this.locationReportSelectionListener = locationReportSelectionListener;
 
         refresh();
@@ -126,8 +129,7 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
             }
 
             private void handleSendEmail() {
-                //TODO: implement it
-                Snackbar.make(view, "TODO: implement send email", Snackbar.LENGTH_LONG).show();
+                locationReportEmailSender.sendEmail(locationReport);
             }
         }
     }

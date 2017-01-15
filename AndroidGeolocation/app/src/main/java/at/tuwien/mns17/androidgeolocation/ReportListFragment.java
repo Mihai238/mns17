@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSender;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSenderImpl;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportFactory;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportFactoryImpl;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepository;
@@ -25,6 +27,8 @@ public class ReportListFragment extends Fragment {
     private LocationReportSelectionListener locationReportSelectionListener;
 
     private LocationReportFactory locationReportFactory = new LocationReportFactoryImpl();
+
+    private LocationReportEmailSender locationReportEmailSender = new LocationReportEmailSenderImpl();
 
     private LocationReportRepository locationReportRepository = new LocationReportRepositoryImpl();
 
@@ -45,7 +49,7 @@ public class ReportListFragment extends Fragment {
 
         RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.location_reports_recycler_view);
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        locationReportsAdapter = new LocationReportsAdapter(locationReportRepository, locationReportSelectionListener);
+        locationReportsAdapter = new LocationReportsAdapter(locationReportRepository, locationReportEmailSender, locationReportSelectionListener);
         reportsRecyclerView.setAdapter(locationReportsAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
