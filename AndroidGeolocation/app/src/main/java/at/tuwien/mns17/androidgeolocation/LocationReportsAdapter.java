@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -53,9 +54,7 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
     public void onBindViewHolder(ViewHolder holder, int position) {
         LocationReport locationReport = locationReports.get(position);
 
-        holder.view.setOnClickListener(new LocationReportSelectionListenerAdapter(locationReport));
-        holder.title.setText(locationReport.getName());
-        holder.subtitle.setText(locationReport.getTime());
+        holder.bind(locationReport);
     }
 
     @Override
@@ -64,30 +63,46 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        final View view;
-        final TextView title;
-        final TextView subtitle;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private final View view;
+        private final TextView title;
+        private final TextView subtitle;
+        private final View menu;
 
         ViewHolder(View view) {
             super(view);
             this.view = view;
             this.title = (TextView) view.findViewById(R.id.title);
             this.subtitle = (TextView) view.findViewById(R.id.subtitle);
-        }
-    }
-
-    private class LocationReportSelectionListenerAdapter implements View.OnClickListener {
-
-        private final LocationReport locationReport;
-
-        private LocationReportSelectionListenerAdapter(LocationReport locationReport) {
-            this.locationReport = locationReport;
+            this.menu = view.findViewById(R.id.menu);
         }
 
-        @Override
-        public void onClick(View view) {
-            locationReportSelectionListener.onLocationReportSelected(locationReport);
+        public void bind(LocationReport locationReport) {
+            view.setOnClickListener(new LocationReportSelectionListenerAdapter(locationReport));
+            title.setText(locationReport.getName());
+            subtitle.setText(locationReport.getTime());
+
+            menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(view.getContext(), "haha", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+
+        private class LocationReportSelectionListenerAdapter implements View.OnClickListener {
+
+            private final LocationReport locationReport;
+
+            private LocationReportSelectionListenerAdapter(LocationReport locationReport) {
+                this.locationReport = locationReport;
+            }
+
+            @Override
+            public void onClick(View view) {
+                locationReportSelectionListener.onLocationReportSelected(locationReport);
+            }
         }
     }
 }
