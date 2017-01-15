@@ -1,8 +1,12 @@
 package at.tuwien.mns17.androidgeolocation;
 
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,35 +15,32 @@ import android.widget.Toast;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
+import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepository;
 
 
 class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter.ViewHolder> {
 
     private static final String TAG = LocationReportsAdapter.class.getName();
 
+    private final LocationReportRepository locationReportRepository;
     private LocationReportSelectionListener locationReportSelectionListener;
     private List<LocationReport> locationReports;
 
-    private LocationReportsAdapter() {
+    public LocationReportsAdapter(LocationReportRepository locationReportRepository,
+                                  LocationReportSelectionListener locationReportSelectionListener) {
 
-    }
-
-    public static LocationReportsAdapter create() {
-        return new LocationReportsAdapter();
-    }
-
-    public LocationReportsAdapter with(LocationReportSelectionListener locationReportSelectionListener) {
+        this.locationReportRepository = locationReportRepository;
         this.locationReportSelectionListener = locationReportSelectionListener;
-        return this;
+
+        refresh();
     }
 
-    public LocationReportsAdapter update(List<LocationReport> locationReports) {
-        Log.d(TAG, "Updated with " + locationReports.size() + " location reports");
+    public void refresh() {
+        this.locationReports = locationReportRepository.findAll();
 
-        this.locationReports = locationReports;
+        Log.d(TAG, "Refreshed with " + locationReports.size() + " location reports");
+
         notifyDataSetChanged();
-
-        return this;
     }
 
     @Override
@@ -68,6 +69,7 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
         private final TextView title;
         private final TextView subtitle;
         private final View menu;
+        private LocationReport locationReport;
 
         ViewHolder(View view) {
             super(view);
@@ -78,30 +80,54 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
         }
 
         public void bind(LocationReport locationReport) {
-            view.setOnClickListener(new LocationReportSelectionListenerAdapter(locationReport));
+            this.locationReport = locationReport;
+
+            view.setOnClickListener(new LocationReportSelectionListenerAdapter());
             title.setText(locationReport.getName());
             subtitle.setText(locationReport.getTime());
 
-            menu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "haha", Toast.LENGTH_LONG).show();
-                }
-            });
+            menu.setOnClickListener(new MoreOptionsClickListener());
         }
 
 
         private class LocationReportSelectionListenerAdapter implements View.OnClickListener {
-
-            private final LocationReport locationReport;
-
-            private LocationReportSelectionListenerAdapter(LocationReport locationReport) {
-                this.locationReport = locationReport;
-            }
-
             @Override
             public void onClick(View view) {
                 locationReportSelectionListener.onLocationReportSelected(locationReport);
+            }
+        }
+
+        private class MoreOptionsClickListener implements View.OnClickListener {
+
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(view.getContext(), menu, Gravity.END);
+                popup.inflate(R.menu.menu_location_report_item);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.action_send_mail) {
+                            handleSendEmail();
+                        } else if (item.getItemId() == R.id.action_delete) {
+                            handleDelete();
+                        }
+
+                        return false;
+                    }
+                });
+
+                popup.show();
+            }
+
+            private void handleDelete() {
+                locationReportRepository.delete(locationReport);
+                refresh();
+                Snackbar.make(view, "Location report deleted", Snackbar.LENGTH_LONG).show();
+            }
+
+            private void handleSendEmail() {
+                //TODO: implement it
+                Snackbar.make(view, "TODO: implement send email", Snackbar.LENGTH_LONG).show();
             }
         }
     }

@@ -45,9 +45,7 @@ public class ReportListFragment extends Fragment {
 
         RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.location_reports_recycler_view);
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        locationReportsAdapter = LocationReportsAdapter.create()
-                .with(locationReportSelectionListener)
-                .update(locationReportRepository.findAll());
+        locationReportsAdapter = new LocationReportsAdapter(locationReportRepository, locationReportSelectionListener);
         reportsRecyclerView.setAdapter(locationReportsAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -85,7 +83,7 @@ public class ReportListFragment extends Fragment {
 
                             Snackbar.make(view, "Location report created", Snackbar.LENGTH_LONG).show();
 
-                            locationReportsAdapter.update(locationReportRepository.findAll());
+                            locationReportsAdapter.refresh();
                         }
                     });
         }

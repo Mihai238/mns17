@@ -7,4 +7,6 @@ public interface LocationReportRepository {
     List<LocationReport> findAll();
 
     void save(LocationReport report);
+
+    void delete(LocationReport report);
 }

@@ -29,4 +29,13 @@ public class LocationReportRepositoryImpl implements LocationReportRepository {
 
         Log.d(TAG, "Location report saved: " + report);
     }
+
+    @Override
+    public void delete(LocationReport report) {
+        Log.d(TAG, "Deleting location report: " + report);
+
+        locationReports.remove(report);
+
+        Log.d(TAG, "Location report deleted: " + report);
+    }
 }
