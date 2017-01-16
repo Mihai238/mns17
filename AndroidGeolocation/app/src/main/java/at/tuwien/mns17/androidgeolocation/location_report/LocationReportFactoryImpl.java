@@ -26,9 +26,34 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
 
     @Override
     public Single<LocationReport> createLocationReport() {
+        /*
         return Single.fromCallable(new LocationReportProducer(telephonyManager))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+        */
+
+        return Single.create(singleSubscriber -> {
+            LocationReport locationReport = new LocationReport();
+            Log.d(TAG, "Creating new location report");
+
+            List<CellInfo> cells = getCellInfoList();
+            Log.d(TAG, "Found " + cells.size() + " Cells");
+
+            MozillaLocationService locationService = new MozillaLocationService();
+            locationService.fetch(cells)
+                    .subscribe(
+                            (success) -> {
+                                Log.i(TAG,"Recieved a response");
+                                singleSubscriber.onSuccess(locationReport);
+                            },
+                            Throwable::printStackTrace
+                    );
+        });
+    }
+
+    private List<CellInfo> getCellInfoList() {
+        List<CellInfo> allCellInfo = telephonyManager.getAllCellInfo();
+        return allCellInfo == null ? Collections.emptyList() : allCellInfo;
     }
 
     private static class LocationReportProducer implements Callable<LocationReport> {
