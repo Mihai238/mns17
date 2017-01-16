@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class ReportListFragment extends Fragment {
 
     private LocationReportSelectionListener locationReportSelectionListener;
 
-    private LocationReportFactory locationReportFactory = new LocationReportFactoryImpl();
+    private LocationReportFactory locationReportFactory;
 
     private LocationReportEmailSender locationReportEmailSender = new LocationReportEmailSenderImpl();
 
@@ -46,6 +47,7 @@ public class ReportListFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle(getActivity().getTitle());
+        locationReportFactory = new LocationReportFactoryImpl((TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE));
 
         RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.location_reports_recycler_view);
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
