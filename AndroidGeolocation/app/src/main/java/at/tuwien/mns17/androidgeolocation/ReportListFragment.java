@@ -1,6 +1,7 @@
 package at.tuwien.mns17.androidgeolocation;
 
 import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -47,7 +48,7 @@ public class ReportListFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle(getActivity().getTitle());
-        locationReportFactory = new LocationReportFactoryImpl((TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE));
+        locationReportFactory = new LocationReportFactoryImpl((TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE), (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE));
 
         RecyclerView reportsRecyclerView = (RecyclerView) view.findViewById(R.id.location_reports_recycler_view);
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

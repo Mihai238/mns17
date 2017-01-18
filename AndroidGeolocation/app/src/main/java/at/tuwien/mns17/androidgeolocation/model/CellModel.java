@@ -1,4 +1,4 @@
-package at.tuwien.mns17.androidgeolocation.service;
+package at.tuwien.mns17.androidgeolocation.model;
 
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;

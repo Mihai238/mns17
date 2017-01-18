@@ -1,6 +1,6 @@
 package at.tuwien.mns17.androidgeolocation.service;
 
-import android.telephony.CellInfo;
+import android.net.wifi.ScanResult;
 import android.util.Log;
 import com.android.volley.Network;
 import com.android.volley.Request;
@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.List;
 
+import at.tuwien.mns17.androidgeolocation.model.CellModel;
+import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 import rx.Single;
 
 /**
@@ -43,7 +45,7 @@ public class MozillaLocationService implements Serializable {
         mRequestQueue.start();
     }
 
-    public Single<JSONObject> fetch(List<CellInfo> cells) {
+    public Single<JSONObject> fetch(List<CellModel> cells, List<WifiModel> wifiSpots) {
         Log.i(TAG, "Staring a Geolocation fetching");
 
         return Single.create(subscriber -> {
@@ -53,6 +55,7 @@ public class MozillaLocationService implements Serializable {
             JSONObject postbody = new JSONObject();
             try {
                 postbody.put("cellTowers", marshellCellId(cells));
+                postbody.put("wifiAccessPoints", marshellHotSpots(wifiSpots));
             } catch (JSONException e) {
                 subscriber.onError(e);
             }
@@ -65,10 +68,15 @@ public class MozillaLocationService implements Serializable {
         });
     }
 
-    private JSONArray marshellCellId(List<CellInfo> cellInfos) throws JSONException {
+    /**
+     * Creates Json Structure required by Mozilla Location Service of Cellinfos
+     * @param cellInfos List of Cells
+     * @return JsonArray
+     * @throws JSONException
+     */
+    private JSONArray marshellCellId(List<CellModel> cellInfos) throws JSONException {
         JSONArray cellTowers = new JSONArray();
-        for( CellInfo info : cellInfos ) {
-            CellModel model = CellModel.from(info);
+        for( CellModel model : cellInfos ) {
             if( model.isValid() ) {
                 JSONObject cellTower = new JSONObject();
                 cellTower.put("radioType", model.getRadioType());
@@ -82,5 +90,32 @@ public class MozillaLocationService implements Serializable {
         }
 
         return cellTowers;
+    }
+
+    /**
+     * Creates Json Structure required by Mozilla Location Service for Wifi Hotspots
+     * @param wifiModels List of Wifi Hot Spots
+     * @return JsonArray
+     */
+    private JSONArray marshellHotSpots(List<WifiModel> wifiModels) throws JSONException {
+        JSONArray wifiAccessPoints = new JSONArray();
+        for( WifiModel w : wifiModels ) {
+            if( w.getSsid().endsWith("_nomap") ) {
+                // Per requirement hidden WLAN networks must be filtered
+                continue;
+            }
+
+            JSONObject wifiAccessPoint = new JSONObject();
+            wifiAccessPoint.put("macAddress", w.getMacAddress());
+            if( w.getFrequency() > 0 ) {
+                wifiAccessPoint.put("frequency", w.getFrequency());
+            }
+            if( w.getSignalStrength() != 0 ) {
+                wifiAccessPoint.put("signalStrength", w.getSignalStrength());
+            }
+            wifiAccessPoint.put("ssid", w.getSsid());
+            wifiAccessPoints.put(wifiAccessPoint);
+        }
+        return wifiAccessPoints;
     }
 }
