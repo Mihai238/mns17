@@ -1,6 +1,5 @@
 package at.tuwien.mns17.androidgeolocation.location_report;
 
-import android.content.Context;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -11,8 +10,6 @@ import java.util.concurrent.Callable;
 
 import at.tuwien.mns17.androidgeolocation.service.MozillaLocationService;
 import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class LocationReportFactoryImpl implements LocationReportFactory {
 
@@ -43,7 +40,7 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
             locationService.fetch(cells)
                     .subscribe(
                             (success) -> {
-                                Log.i(TAG,"Recieved a response");
+                                Log.i(TAG,"Recieved a response: " + success.toString());
                                 singleSubscriber.onSuccess(locationReport);
                             },
                             Throwable::printStackTrace
