@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import at.tuwien.mns17.androidgeolocation.model.CellModel;
+import at.tuwien.mns17.androidgeolocation.model.MozillaResponse;
+import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 
 public class LocationReport implements Serializable {
 
@@ -12,12 +17,40 @@ public class LocationReport implements Serializable {
     private Long id = currentId++;
     private Long timestamp = Calendar.getInstance().getTimeInMillis();
 
+    private MozillaResponse mozillaResponse;
+    private List<CellModel> cells;
+    private List<WifiModel> wifiHotSpots;
+
     public String getName() {
         return "Location report #" + id;
     }
 
     public String getTime() {
         return SimpleDateFormat.getInstance().format(new Date(timestamp));
+    }
+
+    public MozillaResponse getMozillaResponse() {
+        return mozillaResponse;
+    }
+
+    public void setMozillaResponse(MozillaResponse mozillaResponse) {
+        this.mozillaResponse = mozillaResponse;
+    }
+
+    public List<CellModel> getCells() {
+        return cells;
+    }
+
+    public void setCells(List<CellModel> cells) {
+        this.cells = cells;
+    }
+
+    public List<WifiModel> getWifiHotSpots() {
+        return wifiHotSpots;
+    }
+
+    public void setWifiHotSpots(List<WifiModel> wifiHotSpots) {
+        this.wifiHotSpots = wifiHotSpots;
     }
 
     @Override

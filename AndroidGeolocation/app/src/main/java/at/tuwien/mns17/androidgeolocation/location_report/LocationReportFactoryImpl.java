@@ -6,11 +6,14 @@ import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
+import at.tuwien.mns17.androidgeolocation.model.MozillaResponse;
 import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 import at.tuwien.mns17.androidgeolocation.service.MozillaLocationService;
 import rx.Single;
@@ -42,7 +45,16 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
             locationService.fetch(cells, wifiSpots)
                     .subscribe(
                             (success) -> {
-                                Log.i(TAG,"Recieved a response: " + success.toString());
+                                Log.d(TAG,"Recieved a response: " + success.toString());
+                                try {
+                                    MozillaResponse mozillaResponse = MozillaResponse.fromMozillaResponse(success);
+                                    Log.i(TAG, "Got Mozilla API Response location " + mozillaResponse.getLat() + " " + mozillaResponse.getLng());
+                                    locationReport.setMozillaResponse(mozillaResponse);
+                                    locationReport.setCells(cells);
+                                    locationReport.setWifiHotSpots(wifiSpots);
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "Unable to parse MozillaResponse into Model " + e.getMessage());
+                                }
                                 singleSubscriber.onSuccess(locationReport);
                             },
                             Throwable::printStackTrace
