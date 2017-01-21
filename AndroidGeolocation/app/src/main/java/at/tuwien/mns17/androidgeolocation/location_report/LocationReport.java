@@ -1,5 +1,7 @@
 package at.tuwien.mns17.androidgeolocation.location_report;
 
+import android.location.Location;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,6 +63,20 @@ public class LocationReport implements Serializable {
 
     public void setGPS(GPSModel gps) {
         this.gps = gps;
+    }
+
+    public float getDistanceBetweenMLSandGPS() {
+        // construct Location object with gps coordinates
+        Location gpsLocation = new Location("");
+        gpsLocation.setLatitude(gps.getLatitude());
+        gpsLocation.setLongitude(gps.getLongitude());
+
+        // construct Location object with mls coordinates
+        Location mlsLocation = new Location("");
+        mlsLocation.setLatitude(mozillaResponse.getLat());
+        mlsLocation.setLongitude(mozillaResponse.getLng());
+
+        return gpsLocation.distanceTo(mlsLocation);
     }
 
     @Override
