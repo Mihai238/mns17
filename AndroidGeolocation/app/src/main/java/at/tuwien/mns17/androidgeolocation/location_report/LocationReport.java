@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
+import at.tuwien.mns17.androidgeolocation.model.GPSModel;
 import at.tuwien.mns17.androidgeolocation.model.MozillaResponse;
 import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 
@@ -20,6 +21,7 @@ public class LocationReport implements Serializable {
     private MozillaResponse mozillaResponse;
     private List<CellModel> cells;
     private List<WifiModel> wifiHotSpots;
+    private GPSModel gps;
 
     public String getName() {
         return "Location report #" + id;
@@ -51,6 +53,14 @@ public class LocationReport implements Serializable {
 
     public void setWifiHotSpots(List<WifiModel> wifiHotSpots) {
         this.wifiHotSpots = wifiHotSpots;
+    }
+
+    public GPSModel getGPS() {
+        return gps;
+    }
+
+    public void setGPS(GPSModel gps) {
+        this.gps = gps;
     }
 
     @Override

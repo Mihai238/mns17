@@ -1,13 +1,9 @@
 package at.tuwien.mns17.androidgeolocation.location_report;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.support.v4.app.ActivityCompat;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -18,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
+import at.tuwien.mns17.androidgeolocation.model.GPSModel;
 import at.tuwien.mns17.androidgeolocation.model.MozillaResponse;
 import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 import at.tuwien.mns17.androidgeolocation.service.MozillaLocationService;
@@ -62,17 +59,19 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
                                 } catch (JSONException e) {
                                     Log.e(TAG, "Unable to parse MozillaResponse into Model " + e.getMessage());
                                 }
+
+                                Location gpsLocation = this.getGPSLocation();
+                                if (gpsLocation != null) {
+                                    Log.i(TAG, "Fetched GPS location: Longitude=" + gpsLocation.getLongitude() + "; Latitude=" + gpsLocation.getLatitude() + "; Accuracy=" + gpsLocation.getAccuracy());
+                                    locationReport.setGPS(new GPSModel(gpsLocation.getLongitude(), gpsLocation.getLatitude(), gpsLocation.getAccuracy()));
+                                } else {
+                                    Log.i(TAG, "Unable to fetch GPS location");
+                                }
+
                                 singleSubscriber.onSuccess(locationReport);
                             },
                             Throwable::printStackTrace
                     );
-
-            Location location = this.getGPSLocation();
-            if (location != null) {
-                Log.i(TAG, "Fetched GPS location: Longitude=" + location.getLongitude() + "; Latitude=" + location.getLatitude() + "; Accuracy=" + location.getAccuracy());
-            } else {
-                Log.i(TAG, "Unable to fetch GPS location");
-            }
         });
     }
 
