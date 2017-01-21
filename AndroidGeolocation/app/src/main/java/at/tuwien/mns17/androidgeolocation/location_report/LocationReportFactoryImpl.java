@@ -1,7 +1,13 @@
 package at.tuwien.mns17.androidgeolocation.location_report;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -9,7 +15,6 @@ import android.util.Log;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
@@ -22,10 +27,12 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
 
     private TelephonyManager telephonyManager;
     private WifiManager wifiManager;
+    private LocationManager locationManager;
 
-    public LocationReportFactoryImpl(TelephonyManager telephonyManager, WifiManager wifiManager) {
+    public LocationReportFactoryImpl(TelephonyManager telephonyManager, WifiManager wifiManager, LocationManager locationManager) {
         this.telephonyManager = telephonyManager;
         this.wifiManager = wifiManager;
+        this.locationManager = locationManager;
     }
 
     private static final String TAG = LocationReportRepositoryImpl.class.getName();
@@ -59,7 +66,31 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
                             },
                             Throwable::printStackTrace
                     );
+
+            Location location = this.getGPSLocation();
+            if (location != null) {
+                Log.i(TAG, "Fetched GPS location: Longitude=" + location.getLongitude() + "; Latitude=" + location.getLatitude() + "; Accuracy=" + location.getAccuracy());
+            } else {
+                Log.i(TAG, "Unable to fetch GPS location");
+            }
         });
+    }
+
+    private Location getGPSLocation() {
+        Log.i(TAG, "Fetching GPS location...");
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.i(TAG, "GPS Provider is enabled");
+            try {
+                Log.i(TAG, "Trying to fetch the GPS location...");
+                return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            } catch (SecurityException e) {
+                Log.e(TAG, "SecurityException while fetching the GPS location", e);
+                return null;
+            }
+        } else {
+            Log.i(TAG, "GPS Provider is not enabled");
+            return null;
+        }
     }
 
     private List<CellModel> getCellInfoList() {

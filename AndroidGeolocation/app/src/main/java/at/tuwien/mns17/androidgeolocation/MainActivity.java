@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
 
     private void askPermissions() {
         if (!hasAllPermissions()) {
-            String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET};
+            String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
             ActivityCompat.requestPermissions(this, permissions, 1);
         }
     }
