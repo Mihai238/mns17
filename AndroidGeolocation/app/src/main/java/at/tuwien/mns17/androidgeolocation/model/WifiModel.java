@@ -3,11 +3,13 @@ package at.tuwien.mns17.androidgeolocation.model;
 
 import android.net.wifi.ScanResult;
 
+import java.io.Serializable;
+
 /**
  * Created by AbfalterJakob on 18.01.2017.
  */
 
-public class WifiModel {
+public class WifiModel implements Serializable {
     private final String macAddress;
     private final int frequency;
     private final int signalStrength;

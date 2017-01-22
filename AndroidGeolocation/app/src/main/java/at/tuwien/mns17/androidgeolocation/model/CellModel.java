@@ -6,7 +6,9 @@ import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
 
-public class CellModel {
+import java.io.Serializable;
+
+public class CellModel implements Serializable {
 
     public static final String UNKNOWN = "unknown";
 

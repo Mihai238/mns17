@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MozillaResponse {
+import java.io.Serializable;
+
+public class MozillaResponse implements Serializable {
     private double lat;
     private double lng;
     private String fallback;

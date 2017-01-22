@@ -1,10 +1,12 @@
 package at.tuwien.mns17.androidgeolocation.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Michael on 21.01.2017.
  */
 
-public class GPSModel {
+public class GPSModel implements Serializable {
     private double longitude;
     private double latitude;
     private float accuracy;
