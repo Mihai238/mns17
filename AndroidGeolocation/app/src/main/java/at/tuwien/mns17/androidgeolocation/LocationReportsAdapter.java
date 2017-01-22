@@ -1,5 +1,6 @@
 package at.tuwien.mns17.androidgeolocation;
 
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -22,15 +23,18 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
 
     private static final String TAG = LocationReportsAdapter.class.getName();
 
+    private final Context context;
     private final LocationReportRepository locationReportRepository;
     private final LocationReportEmailSender locationReportEmailSender;
     private final LocationReportSelectionListener locationReportSelectionListener;
     private List<LocationReport> locationReports;
 
-    public LocationReportsAdapter(LocationReportRepository locationReportRepository,
+    public LocationReportsAdapter(Context context,
+                                  LocationReportRepository locationReportRepository,
                                   LocationReportEmailSender locationReportEmailSender,
                                   LocationReportSelectionListener locationReportSelectionListener) {
 
+        this.context = context;
         this.locationReportRepository = locationReportRepository;
         this.locationReportEmailSender = locationReportEmailSender;
         this.locationReportSelectionListener = locationReportSelectionListener;
@@ -106,17 +110,14 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
             public void onClick(View view) {
                 PopupMenu popup = new PopupMenu(view.getContext(), menu, Gravity.END);
                 popup.inflate(R.menu.menu_location_report_item);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.action_send_mail) {
-                            handleSendEmail();
-                        } else if (item.getItemId() == R.id.action_delete) {
-                            handleDelete();
-                        }
-
-                        return false;
+                popup.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.action_send_mail) {
+                        handleSendEmail();
+                    } else if (item.getItemId() == R.id.action_delete) {
+                        handleDelete();
                     }
+
+                    return false;
                 });
 
                 popup.show();
@@ -129,7 +130,7 @@ class LocationReportsAdapter extends RecyclerView.Adapter<LocationReportsAdapter
             }
 
             private void handleSendEmail() {
-                locationReportEmailSender.sendEmail(locationReport);
+                locationReportEmailSender.sendEmail(context, locationReport);
             }
         }
     }

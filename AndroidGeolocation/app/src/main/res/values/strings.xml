@@ -6,4 +6,12 @@
     <string name="more_options">More options</string>
     <string name="delete">Delete</string>
     <string name="send_email">Send email</string>
+
+    <string name="location_report_email_subject">Location Report</string>
+    <string name="location_report_email_text_name">Name</string>
+    <string name="location_report_email_text_time">Time</string>
+    <string name="location_report_email_text_gps">GPS Data (Longitude, Latitude, Accuracy[m])</string>
+    <string name="location_report_email_text_mlp_response">MLP Response</string>
+    <string name="location_report_email_text_distance_mlp_gps">Distance MLP-GPS [m]</string>
+    <string name="location_report_email_text_not_available">not available</string>
 </resources>

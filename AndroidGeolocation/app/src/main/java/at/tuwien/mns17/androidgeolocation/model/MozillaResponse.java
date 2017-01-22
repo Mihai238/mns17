@@ -1,11 +1,9 @@
 package at.tuwien.mns17.androidgeolocation.model;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-/**
- * Created by Jakob on 20.01.2017.
- */
 
 public class MozillaResponse {
     private double lat;
@@ -14,10 +12,15 @@ public class MozillaResponse {
     private int accuracy;
 
     public static MozillaResponse fromMozillaResponse(JSONObject jsonObject) throws JSONException {
-        return new MozillaResponse(jsonObject.getJSONObject("location").getDouble("lat"), jsonObject.getJSONObject("location").getDouble("lng"), jsonObject.getString("fallback"), (int) jsonObject.getInt("accuracy"));
+        return new MozillaResponse(
+                jsonObject.getJSONObject("location").getDouble("lat"),
+                jsonObject.getJSONObject("location").getDouble("lng"),
+                jsonObject.has("fallback") ? jsonObject.getString("fallback") : null,
+                (int) jsonObject.getInt("accuracy")
+        );
     }
 
-    public MozillaResponse(double lat, double lng, String fallback, int accuracy) {
+    private MozillaResponse(double lat, double lng, String fallback, int accuracy) {
         this.lat = lat;
         this.lng = lng;
         this.fallback = fallback;
@@ -40,6 +43,7 @@ public class MozillaResponse {
         this.lng = lng;
     }
 
+    @Nullable
     public String getFallback() {
         return fallback;
     }
@@ -54,5 +58,14 @@ public class MozillaResponse {
 
     public void setAccuracy(int accuracy) {
         this.accuracy = accuracy;
+    }
+
+    @Override
+    public String toString() {
+        return "MozillaResponse{" +
+                "lat=" + lat +
+                ", lng=" + lng +
+                ", accuracy=" + accuracy +
+                '}';
     }
 }

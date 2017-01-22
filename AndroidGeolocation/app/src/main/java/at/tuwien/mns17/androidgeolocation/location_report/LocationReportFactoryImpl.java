@@ -11,6 +11,7 @@ import android.util.Log;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
@@ -32,7 +33,7 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
         this.locationManager = locationManager;
     }
 
-    private static final String TAG = LocationReportRepositoryImpl.class.getName();
+    private static final String TAG = LocationReportFactoryImpl.class.getName();
 
     @Override
     public Single<LocationReport> createLocationReport() {
@@ -65,7 +66,7 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
                                     Log.i(TAG, "Fetched GPS location: Longitude=" + gpsLocation.getLongitude() + "; Latitude=" + gpsLocation.getLatitude() + "; Accuracy=" + gpsLocation.getAccuracy());
                                     locationReport.setGPS(new GPSModel(gpsLocation.getLongitude(), gpsLocation.getLatitude(), gpsLocation.getAccuracy()));
                                 } else {
-                                    Log.i(TAG, "Unable to fetch GPS location");
+                                    Log.w(TAG, "Unable to fetch GPS location");
                                 }
 
                                 singleSubscriber.onSuccess(locationReport);
@@ -93,7 +94,9 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
     }
 
     private List<CellModel> getCellInfoList() {
-        List<CellInfo> allCellInfo = telephonyManager.getAllCellInfo();
+        List<CellInfo> nullableCellInfos = telephonyManager.getAllCellInfo();
+        List<CellInfo> allCellInfo = nullableCellInfos != null ? nullableCellInfos : Collections.emptyList();
+
         List<CellModel> cells = new ArrayList<>();
         for( CellInfo c : allCellInfo ) {
             cells.add(CellModel.from(c));
