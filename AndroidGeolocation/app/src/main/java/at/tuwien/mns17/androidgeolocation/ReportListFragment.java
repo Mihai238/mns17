@@ -1,14 +1,11 @@
 package at.tuwien.mns17.androidgeolocation;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,14 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import at.tuwien.mns17.androidgeolocation.location_report.LocationReport;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSender;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSenderImpl;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportFactory;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportFactoryImpl;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepository;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportRepositoryImpl;
-import rx.functions.Action1;
 
 public class ReportListFragment extends Fragment {
 
@@ -36,7 +31,7 @@ public class ReportListFragment extends Fragment {
 
     private LocationReportEmailSender locationReportEmailSender = new LocationReportEmailSenderImpl();
 
-    private LocationReportRepository locationReportRepository = new LocationReportRepositoryImpl();
+    private LocationReportRepository locationReportRepository;
 
     private LocationReportsAdapter locationReportsAdapter;
 
@@ -69,6 +64,7 @@ public class ReportListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        locationReportRepository = new LocationReportRepositoryImpl(getContext(), "psw"); // TODO
         if (context instanceof LocationReportSelectionListener) {
             locationReportSelectionListener = (LocationReportSelectionListener) context;
         } else {

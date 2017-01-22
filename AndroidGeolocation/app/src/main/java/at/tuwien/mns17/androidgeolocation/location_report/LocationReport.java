@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
 import at.tuwien.mns17.androidgeolocation.model.GPSModel;
@@ -15,9 +16,6 @@ import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 
 public class LocationReport implements Serializable {
 
-    private static Long currentId = 1L;
-
-    private Long id = currentId++;
     private Long timestamp = Calendar.getInstance().getTimeInMillis();
 
     private MozillaResponse mozillaResponse;
@@ -25,8 +23,18 @@ public class LocationReport implements Serializable {
     private List<WifiModel> wifiHotSpots;
     private GPSModel gps;
 
+    private final String uuid;
+
+    public LocationReport() {
+        this.uuid = UUID.randomUUID().toString();
+    }
+
+    public String getUUID() {
+        return uuid;
+    }
+
     public String getName() {
-        return "Location report #" + id;
+        return "Location report #" + uuid.substring(0, 7);
     }
 
     public String getTime() {

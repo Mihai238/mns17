@@ -1,7 +1,7 @@
 package at.tuwien.mns17.androidgeolocation.service;
 
-import android.net.wifi.ScanResult;
 import android.util.Log;
+
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,17 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.io.Serializable;
 import java.util.List;
 
 import at.tuwien.mns17.androidgeolocation.model.CellModel;
 import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 import rx.Single;
-
-/**
- * Created by AbfalterJakob on 16.01.2017.
- */
 
 public class MozillaLocationService implements Serializable {
     private static String TAG = "MozillaLocationService";

@@ -11,7 +11,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.UUID;
 
 import at.tuwien.mns17.androidgeolocation.R;
 import at.tuwien.mns17.androidgeolocation.model.GPSModel;
@@ -27,7 +26,7 @@ public class LocationReportEmailSenderImpl implements LocationReportEmailSender 
     @Override
     public void sendEmail(Context context, LocationReport report) {
         Log.d(TAG, "Sending location report per email: " + report);
-        Uri attachmentUri = getAttachmentUri(createEmailText(context, report));
+        Uri attachmentUri = getAttachmentUri(report.getUUID(), createEmailText(context, report));
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType(MIME_TYPE);
@@ -42,7 +41,7 @@ public class LocationReportEmailSenderImpl implements LocationReportEmailSender 
         }
     }
 
-    private Uri getAttachmentUri(String content) {
+    private Uri getAttachmentUri(String attachmentUUID, String content) {
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             throw new RuntimeException("Media not mounted");
         } else {
@@ -56,7 +55,7 @@ public class LocationReportEmailSenderImpl implements LocationReportEmailSender 
             }
 
             try {
-                File attachmentFile = new File(attachmentDir, UUID.randomUUID().toString() + ".txt");
+                File attachmentFile = new File(attachmentDir, attachmentUUID + ".txt");
                 FileUtils.writeStringToFile(attachmentFile, content, UTF_8);
                 return Uri.fromFile(attachmentFile);
             } catch (IOException e) {
