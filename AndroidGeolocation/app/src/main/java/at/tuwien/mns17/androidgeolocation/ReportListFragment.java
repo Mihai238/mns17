@@ -15,6 +15,7 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSender;
 import at.tuwien.mns17.androidgeolocation.location_report.LocationReportEmailSenderImpl;
@@ -56,7 +57,7 @@ public class ReportListFragment extends Fragment {
         reportsRecyclerView.setAdapter(locationReportsAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new CreateReportListener());
+        fab.setOnClickListener(new CreateReportListener(view));
 
         return view;
     }
@@ -81,16 +82,27 @@ public class ReportListFragment extends Fragment {
 
     private class CreateReportListener implements View.OnClickListener {
 
+        private final View parent;
+
+        private CreateReportListener(View parent) {
+            this.parent = parent;
+        }
+
         @Override
         public void onClick(final View view) {
+            ProgressBar progressBar = (ProgressBar) parent.findViewById(R.id.toolbar_progress_bar);
+            progressBar.setVisibility(View.VISIBLE);
+
             locationReportFactory.createLocationReport()
                     .subscribe(report -> {
+                        progressBar.setVisibility(View.INVISIBLE);
+
                         locationReportRepository.save(report);
 
                         Snackbar.make(view, "Location report created", Snackbar.LENGTH_LONG).show();
 
                         locationReportsAdapter.refresh();
-                    });
+                    }, throwable -> progressBar.setVisibility(View.INVISIBLE));
         }
     }
 }

@@ -1,9 +1,11 @@
 package at.tuwien.mns17.androidgeolocation.location_report;
 
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -20,6 +22,9 @@ import at.tuwien.mns17.androidgeolocation.model.MozillaResponse;
 import at.tuwien.mns17.androidgeolocation.model.WifiModel;
 import at.tuwien.mns17.androidgeolocation.service.MozillaLocationService;
 import rx.Single;
+import rx.SingleSubscriber;
+import rx.Subscriber;
+import rx.functions.Action1;
 
 public class LocationReportFactoryImpl implements LocationReportFactory {
 
@@ -61,36 +66,45 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
                                     Log.e(TAG, "Unable to parse MozillaResponse into Model " + e.getMessage());
                                 }
 
-                                Location gpsLocation = this.getGPSLocation();
-                                if (gpsLocation != null) {
-                                    Log.i(TAG, "Fetched GPS location: Longitude=" + gpsLocation.getLongitude() + "; Latitude=" + gpsLocation.getLatitude() + "; Accuracy=" + gpsLocation.getAccuracy());
-                                    locationReport.setGPS(new GPSModel(gpsLocation.getLongitude(), gpsLocation.getLatitude(), gpsLocation.getAccuracy()));
-                                } else {
-                                    Log.w(TAG, "Unable to fetch GPS location");
-                                }
+                                getGPSLocation().subscribe(
+                                        gpsLocation -> {
+                                            Log.i(TAG, "Fetched GPS location: Longitude=" + gpsLocation.getLongitude() + "; Latitude=" + gpsLocation.getLatitude() + "; Accuracy=" + gpsLocation.getAccuracy());
+                                            locationReport.setGPS(new GPSModel(gpsLocation.getLongitude(), gpsLocation.getLatitude(), gpsLocation.getAccuracy()));
 
-                                singleSubscriber.onSuccess(locationReport);
+                                            singleSubscriber.onSuccess(locationReport);
+                                        }, throwable -> {
+                                            Log.w(TAG, "Unable to fetch GPS location");
+
+                                            singleSubscriber.onSuccess(locationReport);
+                                        }
+                                );
                             },
                             Throwable::printStackTrace
                     );
         });
     }
 
-    private Location getGPSLocation() {
-        Log.i(TAG, "Fetching GPS location...");
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.i(TAG, "GPS Provider is enabled");
-            try {
-                Log.i(TAG, "Trying to fetch the GPS location...");
-                return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            } catch (SecurityException e) {
-                Log.e(TAG, "SecurityException while fetching the GPS location", e);
-                return null;
+    private Single<Location> getGPSLocation() {
+        return Single.create(new Single.OnSubscribe<Location>() {
+            @Override
+            public void call(SingleSubscriber<? super Location> subscriber) {
+                Log.i(TAG, "Fetching GPS location...");
+
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Log.i(TAG, "GPS Provider is enabled");
+                    try {
+                        Log.i(TAG, "Trying to fetch the GPS location...");
+                        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new LocationListenerAdapter(subscriber), null);
+                    } catch (SecurityException e) {
+                        Log.e(TAG, "SecurityException while fetching the GPS location", e);
+                        subscriber.onSuccess(null);
+                    }
+                } else {
+                    Log.i(TAG, "GPS Provider is not enabled");
+                    subscriber.onSuccess(null);
+                }
             }
-        } else {
-            Log.i(TAG, "GPS Provider is not enabled");
-            return null;
-        }
+        });
     }
 
     private List<CellModel> getCellInfoList() {
@@ -113,4 +127,33 @@ public class LocationReportFactoryImpl implements LocationReportFactory {
         return hotSpots;
     }
 
+    private class LocationListenerAdapter implements LocationListener {
+
+        private final SingleSubscriber<? super Location> subscriber;
+
+        private LocationListenerAdapter(SingleSubscriber<? super Location> subscriber) {
+            this.subscriber = subscriber;
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            Log.d(TAG, "onLocationChanged: " + location);
+            subscriber.onSuccess(location);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    }
 }

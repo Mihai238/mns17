@@ -42,10 +42,40 @@ public class LocationReportDetailsFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitle("Location report");
+        toolbar.setTitle(locationReport.getName());
 
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(locationReport.toString());
+        TextView timestampView = (TextView) view.findViewById(R.id.timestamp);
+        timestampView.setText(locationReport.getTime());
+
+
+        TextView gpsView = (TextView) view.findViewById(R.id.gps);
+        TextView gpsAccuracyView = (TextView) view.findViewById(R.id.gps_accuracy);
+        if (locationReport.getGPS() != null) {
+            gpsView.setText(String.format("%s, %s",
+                    locationReport.getGPS().getLatitude(),
+                    locationReport.getGPS().getLongitude()));
+
+            gpsAccuracyView.setText(locationReport.getGPS().getAccuracy() + " m");
+        } else {
+            gpsView.setText("Not available");
+            gpsAccuracyView.setText("Not available");
+        }
+
+        TextView locationView = (TextView) view.findViewById(R.id.location);
+        TextView locationAccuracyView = (TextView) view.findViewById(R.id.location_accuracy);
+        if (locationReport.getMozillaResponse() != null) {
+            locationView.setText(String.format("%s, %s",
+                    locationReport.getMozillaResponse().getLat(),
+                    locationReport.getMozillaResponse().getLng()));
+
+            locationAccuracyView.setText(locationReport.getMozillaResponse().getAccuracy() + " m");
+        } else {
+            locationView.setText("Not available");
+            locationAccuracyView.setText("Not available");
+        }
+
+        TextView compareView = (TextView) view.findViewById(R.id.location_compare);
+        compareView.setText(locationReport.getDistanceBetweenMLSandGPS() + " m");
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new SendMailListener());
