@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import at.tuwien.mns17.androidgeolocation.MainActivity;
 import at.tuwien.mns17.androidgeolocation.R;
 import at.tuwien.mns17.androidgeolocation.model.GPSModel;
 import at.tuwien.mns17.androidgeolocation.model.MozillaResponse;
@@ -26,7 +28,7 @@ public class LocationReportEmailSenderImpl implements LocationReportEmailSender 
     @Override
     public void sendEmail(Context context, LocationReport report) {
         Log.d(TAG, "Sending location report per email: " + report);
-        Uri attachmentUri = getAttachmentUri(report.getUUID(), createEmailText(context, report));
+        Uri attachmentUri = getAttachmentUri(report.getUUID(), createEmailText(context, report), context);
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType(MIME_TYPE);
@@ -41,7 +43,7 @@ public class LocationReportEmailSenderImpl implements LocationReportEmailSender 
         }
     }
 
-    private Uri getAttachmentUri(String attachmentUUID, String content) {
+    private Uri getAttachmentUri(String attachmentUUID, String content, Context context) {
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             throw new RuntimeException("Media not mounted");
         } else {
@@ -57,7 +59,8 @@ public class LocationReportEmailSenderImpl implements LocationReportEmailSender 
             try {
                 File attachmentFile = new File(attachmentDir, attachmentUUID + ".txt");
                 FileUtils.writeStringToFile(attachmentFile, content, UTF_8);
-                return Uri.fromFile(attachmentFile);
+                return FileProvider.getUriForFile(context, "tuwien.at.ac.fileprovider", attachmentFile);
+                //return Uri.fromFile(attachmentFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
